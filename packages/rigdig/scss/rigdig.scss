@@ -179,6 +179,9 @@ $wrapper-border-radius: 10px !default;
     }
     width: 100%;
   }
+  label[for="sign-on-country"] {
+    font-weight: 600;
+  }
   &__label-text {
     margin-bottom: map-get($spacers, 2);
     font-weight: 600;
@@ -338,6 +341,9 @@ $wrapper-border-radius: 10px !default;
   }
   &__label {
     width: 100%;
+  }
+  label[for="sign-on-country"] {
+    font-weight: 600;
   }
   &__label-text {
     margin-bottom: map-get($spacers, 2);
