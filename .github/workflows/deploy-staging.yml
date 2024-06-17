@@ -58,7 +58,7 @@ jobs:
           - { dir: hardworkingtrucks.com, stack: virgon, id: 5fce557bd28860bc33b8140d, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-hardworkingtrucks.com }
           - { dir: overdriveonline.com, stack: virgon, id: 5fce561dd28860bc33b823ce, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-overdriveonline.com }
           - { dir: totallandscapecare.com, stack: virgon, id: 5fce563dd28860bc33b829c5, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-totallandscapecare.com }
-          - { dir: truckersnews.com, stack: virgon, id: 5fce6131d28860bc33c5b786, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckersnews.com }
+          - { dir: truckersnews.com, stack: leonis, id: 5fce6131d28860bc33c5b786, account: randallreilly, tenant: randallreilly_talent, rancher_label: randall-reilly-truckersnews.com }
           - { dir: truckhistoryreport.com, stack: virgon, id: 64ef840ae470d37d308b45f8, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckhistoryreport.com }
           - { dir: truckpartsandservice.com, stack: virgon, id: 5fce55abd28860bc33b818d0, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckpartsandservice.com }
         ###############################################
@@ -86,7 +86,7 @@ jobs:
           - { dir: hardworkingtrucks.com, stack: virgon, id: 5fce557bd28860bc33b8140d, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-hardworkingtrucks.com }
           - { dir: overdriveonline.com, stack: virgon, id: 5fce561dd28860bc33b823ce, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-overdriveonline.com }
           - { dir: totallandscapecare.com, stack: virgon, id: 5fce563dd28860bc33b829c5, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-totallandscapecare.com }
-          - { dir: truckersnews.com, stack: virgon, id: 5fce6131d28860bc33c5b786, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckersnews.com }
+          - { dir: truckersnews.com, stack: leonis, id: 5fce6131d28860bc33c5b786, account: randallreilly, tenant: randallreilly_talent, rancher_label: randall-reilly-truckersnews.com }
           - { dir: truckhistoryreport.com, stack: virgon, id: 64ef840ae470d37d308b45f8, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckhistoryreport.com }
           - { dir: truckpartsandservice.com, stack: virgon, id: 5fce55abd28860bc33b818d0, account: randallreilly, tenant: randallreilly_all, rancher_label: randall-reilly-truckpartsandservice.com }
         ###############################################
