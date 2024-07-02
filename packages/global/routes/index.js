@@ -3,6 +3,7 @@ const renderBlock = require('@parameter1/base-cms-marko-web-theme-monorail/route
 const search = require('@parameter1/base-cms-marko-web-theme-monorail/routes/search');
 const taxonomy = require('@parameter1/base-cms-marko-web-theme-monorail/routes/taxonomy');
 const omedaNewsletters = require('@parameter1/base-cms-marko-web-omeda/routes/omeda-newsletters');
+const dynamicPages = require('./dynamic-page');
 const feed = require('./feed');
 const nativeX = require('./native-x');
 const printContent = require('./print-content');
@@ -11,6 +12,9 @@ const redirects = require('./redirects');
 const staticPage = require('./static-page');
 
 module.exports = (app, siteConfig) => {
+  // Dynamic Pages
+  dynamicPages(app);
+
   // Feed
   feed(app);
 

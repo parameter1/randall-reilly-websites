@@ -1,4 +1,13 @@
+import { getAsArray, getAsObject, get } from "@parameter1/base-cms-object-path";
+import hasOmedaId from "@parameter1/base-cms-marko-web-theme-monorail/utils/has-omeda-id";
+import getContentPreview from "@parameter1/base-cms-marko-web-theme-monorail/utils/get-content-preview";
+import { cmShowOverlay, cmRestrictContentByReg, cmTruncateBody } from "../../utils/content-meter-helpers";
+
+$ const { global: $global } = out;
+$ const { contentMeterState, req } = $global;
 $ const { id, type, pageNode } = input;
+$ const showOverlay = cmShowOverlay(contentMeterState);
+$ const bypassGate = hasOmedaId(req);
 
 <global-content-wrapper-layout
   id=id
@@ -29,8 +38,56 @@ $ const { id, type, pageNode } = input;
       <theme-page-contents|{ blockName }| attrs={ "data-gallery-id": id }>
 
         $ const bodyId = `content-body-${content.id}`;
-        <marko-web-content-body block-name=blockName obj=content attrs={ id: bodyId } />
 
+        $ const contentRequiresRegistration = get(content, "userRegistration.isCurrentlyRequired");
+        $ const requiresRegistration = !bypassGate && (contentRequiresRegistration || cmRestrictContentByReg(contentMeterState, content));
+        $ const accessLevels = getAsArray(content, "userRegistration.accessLevels");
+        $ console.log(contentRequiresRegistration, requiresRegistration, accessLevels)
+        <marko-web-identity-x-access|context|
+          enabled=requiresRegistration
+          required-access-level-ids=accessLevels
+        >
+          <if(cmTruncateBody(contentMeterState))>
+            $ const body = showOverlay ? getContentPreview({ body: content.body, selector: "p:lt(7)" }) : getContentPreview({ body: content.body, selector: "p:nth-of-type(1)" });
+            <marko-web-content-body block-name=blockName obj={ body } lazyload-first-image=lazyloadFirstImage />
+
+            <div class="content-page-preview-overlay" />
+            <if(!showOverlay)>
+              <theme-content-page-gate
+                can-access=context.canAccess
+                is-logged-in=context.isLoggedIn
+                has-required-access-level=context.hasRequiredAccessLevel
+                requires-access-level=context.requiresAccessLevel
+                requires-user-input=context.requiresUserInput
+                messages="context.messages"
+                user-input-title="Step 2 of 2"
+                profile-call-to-action=""
+                profile-button-label="Create Account"
+                profile-event-name="content_meter_profile"
+                title="Login to Access!"
+              />
+            </if>
+          </if>
+          <else-if(!context.canAccess || context.requiresUserInput)>
+            $ const body = getContentPreview({ body: content.body, selector: "p:lt(4)" });
+            <marko-web-content-body block-name=blockName obj={ body } />
+
+            <div class="content-page-preview-overlay" />
+            <theme-content-page-gate
+              can-access=context.canAccess
+              is-logged-in=context.isLoggedIn
+              has-required-access-level=context.hasRequiredAccessLevel
+              requires-access-level=context.requiresAccessLevel
+              requires-user-input=context.requiresUserInput
+              messages=context.messages
+              title="Login to Access!"
+            />
+            <marko-web-content-body block-name=blockName attrs={ style: "display: none;" }  obj=content modifiers=["ld-json"] />
+          </else-if>
+          <else>
+            <marko-web-content-body block-name=blockName obj=content attrs={ id: bodyId } />
+          </else>
+        </marko-web-identity-x-access>
       </theme-page-contents>
     </div>
   </@section>
