@@ -11,7 +11,14 @@
     "account": "randallreilly",
     "stack": "virgon",
     "key": "tn",
-    "deploy": true
+    "deploy": {
+      "production": true,
+      "staging": {
+        "enabled": true,
+        "stack": "leonis",
+        "tenant": "randallreilly_talent"
+      }
+    }
   },
   "scripts": {
     "dev": "basecms-website dev --compile-dir ../../packages --watch-dir ../../packages --purge-css-content-dir ../../packages --purge-css-content-dir ../../node_modules/@parameter1",
