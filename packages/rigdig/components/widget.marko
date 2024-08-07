@@ -1,5 +1,6 @@
 import defaultValue from "@parameter1/base-cms-marko-core/utils/default-value";
 $ const { getAsObject } = require('@parameter1/base-cms-object-path');
+$ const pretaxAmount = require('@randall-reilly/package-payfabric/src/utils/pre-tax-amount');
 $ const environment = process.env.PAYFABRIC_ENV || 'SANDBOX';
 $ const paymentMethods = (process.env.PAYFABRIC_PAYMENT_METHODS || 'CreditCard,ApplePay,GooglePay').split(',');
 $ const debug = process.env.NODE_ENV === 'development';
@@ -25,13 +26,16 @@ $ const {
   <marko-web-identity-x-context|{ hasUser, user }|>
     <div class="rigdig-widget">
       <marko-web-browser-component name="RigDigWidget" ssr=ssr props={
+        countryCode: hasUser ? user.countryCode : null,
         email: hasUser ? user.email : null,
+        zip: hasUser ? user.postalCode : null,
         inputLabel: input.inputLabel,
         placeholder,
         queryVin: vin,
         debug,
         environment,
         paymentMethods,
+        pretaxAmount,
         title,
         callToAction,
         withTag,
@@ -55,6 +59,7 @@ $ const {
       debug,
       environment,
       paymentMethods,
+      pretaxAmount,
       title,
       callToAction,
       withTag,
