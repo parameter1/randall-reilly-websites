@@ -1,5 +1,4 @@
-
-import createOmedaIdentityBuilder from "@parameter1/base-cms-marko-web-p1-events/utils/create-omeda-identity-builder";
+import createIdentityBuilder from "@parameter1/base-cms-marko-web-identity-x/utils/create-identity-builder";
 import { getAsObject } from "@parameter1/base-cms-object-path";
 
 $ const {
@@ -7,6 +6,8 @@ $ const {
   req,
   nativeX,
   GAM,
+  identityX,
+  res,
   contentMeterState,
 } = out.global;
 
@@ -26,13 +27,16 @@ $ const { gamDefer, gtmDefer } = req.query;
     <marko-web-typekit-font id="fuh2qel" />
 
     <!-- init p1 website events -->
-    <marko-web-p1-events-init
-      on="ready"
-      request-frame=true
-      target-tag="body"
-      identity-query-builder=createOmedaIdentityBuilder(omedaConfig.brandKey)
-      enable-gam-plugin=true
-    />
+    <marko-web-identity-x-context|context|>
+      <!-- init p1 website events -->
+      <marko-web-p1-events-init
+        request-frame=true
+        target-tag="body"
+        on="load"
+        identity-query-builder=createIdentityBuilder(context, identityX.getIdentity(res))
+        enable-gam-plugin=true
+      />
+    </marko-web-identity-x-context>
 
     <!-- init gtm -->
     <marko-web-gtm-init
