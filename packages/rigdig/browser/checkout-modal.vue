@@ -22,7 +22,7 @@
                   {{ vin }}
                 </dd>
                 <dd class="small">
-                  $34.99
+                  ${{ total }}
                 </dd>
               </dl>
             </div>
@@ -57,6 +57,8 @@
         </div>
         <div v-else-if="transactionId" class="rigdig-modal__content">
           <checkout-header
+            :sales-tax="salesTax"
+            :pretax-amount="pretaxAmount"
             :truck-info="truckInfo"
             :vin="vin"
             title="Sending Report!"
@@ -103,6 +105,8 @@
         </div>
         <div v-else class="rigdig-modal__content">
           <checkout-header
+            :sales-tax="salesTax"
+            :pretax-amount="pretaxAmount"
             :truck-info="truckInfo"
             :vin="vin"
             title="Report found!"
@@ -157,6 +161,38 @@
                     >
                   </template>
                 </label>
+                <country-code
+                  v-model="userCountryCode"
+                  class-name="rigdig-modal__form-group"
+                  :required="true"
+                  label="Country"
+                />
+                <label v-if="zipRequired" class="rigdig-modal__label">
+                  <template v-if="zip">
+                    <div class="rigdig-widget__label-text">
+                      Postal/Zip Code <strong class="text-danger">*</strong>
+                    </div>
+                    <input
+                      ref="zip"
+                      :value="zip"
+                      class="form-control rigdig-modal__zip"
+                      type="text"
+                      required
+                    >
+                  </template>
+                  <template v-else>
+                    <div class="rigdig-widget__label-text">
+                      Postal/Zip Code <strong class="text-danger">*</strong>
+                    </div>
+                    <input
+                      ref="zip"
+                      v-model="userZip"
+                      class="form-control rigdig-modal__zip"
+                      type="text"
+                      required
+                    >
+                  </template>
+                </label>
               </div>
 
               <div class="rigdig-modal__buttons">
@@ -183,7 +219,8 @@
             </form>
             <alert-error v-if="error" :show-help="false" title="Unable to start checkout.">
               <p>
-                The email address you supplied is invalid.  Please verify and try again or
+                The email address or zip code you supplied is invalid.
+                Please verify and try again or
                 <a :href="`mailto:${supportEmail}`">contact us</a>.
               </p>
             </alert-error>
@@ -208,6 +245,7 @@
 <script>
 import IconX from '@parameter1/base-cms-marko-web-icons/browser/x.vue';
 import IconCheckCircle from '@parameter1/base-cms-marko-web-icons/browser/check-circle.vue';
+import CountryCode from '@parameter1/base-cms-marko-web-identity-x/browser/form/fields/country.vue';
 import AlertError from './alert-error.vue';
 import CheckoutHeader from './checkout-header.vue';
 
@@ -217,12 +255,21 @@ export default {
   components: {
     AlertError,
     CheckoutHeader,
+    CountryCode,
     IconX,
     IconCheckCircle,
   },
 
   props: {
+    countryCode: {
+      type: String,
+      default: null,
+    },
     email: {
+      type: String,
+      default: null,
+    },
+    zip: {
       type: String,
       default: null,
     },
@@ -249,6 +296,10 @@ export default {
       type: Array,
       default: () => ['CreditCard', 'ApplePay'],
     },
+    pretaxAmount: {
+      type: Number,
+      default: null,
+    },
     debug: {
       type: Boolean,
       default: false,
@@ -262,10 +313,13 @@ export default {
   emits: ['cancel', 'purchase', 'error', 'generate'],
 
   data: () => ({
+    userCountryCode: 'US',
     userEmail: null,
+    userZip: null,
     error: null,
     loading: false,
     complete: false,
+    salesTax: null,
     transactionToken: null,
     transactionId: null,
     client: null,
@@ -276,11 +330,23 @@ export default {
     title() {
       return this.complete ? 'Payment Received!' : 'Report Found!';
     },
+    total() {
+      return (this.salesTax + this.pretaxAmount).toFixed(2);
+    },
+    zipRequired() {
+      return new Set(['US', 'CA']).has(this.userCountryCode);
+    },
   },
 
   created() {
     if (this.email) {
       this.userEmail = this.email;
+    }
+    if (this.zip) {
+      this.userZip = this.zip;
+    }
+    if (this.countryCode) {
+      this.userCountryCode = this.countryCode;
     }
   },
 
@@ -326,7 +392,9 @@ export default {
         headers: { 'content-type': 'application/json; charset=utf-8' },
         body: JSON.stringify({
           vin: this.vin,
+          countryCode: this.userCountryCode,
           email: this.userEmail,
+          zip: this.userZip,
         }),
       });
       if (!response.ok) {
@@ -341,7 +409,8 @@ export default {
         error.code = response.status;
         throw error;
       }
-      const { Token } = await response.json();
+      const { Token, salesTax } = await response.json();
+      this.salesTax = salesTax;
       return Token;
     },
 
