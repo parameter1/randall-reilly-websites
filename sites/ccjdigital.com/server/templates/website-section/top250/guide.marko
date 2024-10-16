@@ -7,7 +7,7 @@ $ const { id, alias, name, pageNode } = input;
 
 $ const guide = get(top250, `guides.${guideAlias}`);
 
-<idx-gating|{ context: idxContext, hasRequiredFields, fields }|>
+<global-idx-gating|{ context: idxContext, hasRequiredFields, fields }|>
   $ const canAccess = idxContext.hasUser && hasRequiredFields;
   $ const identityX = { user: idxContext.user, hasRequiredFields, fields}
   <global-website-section-default-layout
@@ -144,4 +144,4 @@ $ const guide = get(top250, `guides.${guideAlias}`);
       />
     </@section>
   </global-website-section-default-layout>
-</idx-gating>
+</global-idx-gating>

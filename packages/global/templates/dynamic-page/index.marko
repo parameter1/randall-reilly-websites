@@ -42,7 +42,6 @@ $ const bypassGate = hasOmedaId(req);
         $ const contentRequiresRegistration = get(content, "userRegistration.isCurrentlyRequired");
         $ const requiresRegistration = !bypassGate && (contentRequiresRegistration || cmRestrictContentByReg(contentMeterState, content));
         $ const accessLevels = getAsArray(content, "userRegistration.accessLevels");
-        $ console.log(contentRequiresRegistration, requiresRegistration, accessLevels)
         <marko-web-identity-x-access|context|
           enabled=requiresRegistration
           required-access-level-ids=accessLevels

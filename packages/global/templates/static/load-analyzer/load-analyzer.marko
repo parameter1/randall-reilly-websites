@@ -1,0 +1,181 @@
+$ const { site, config } = out.global;
+$ const {fixedCost, salary, varCostPerMile, loads } = input
+
+$ const type = "static";
+$ const title = "Load Analyzer";
+$ const description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+<marko-web-default-page-layout type=`${type}` title=title description=description>
+  <@head>
+    <marko-web-gtm-default-context|{ context }| type=type>
+      <marko-web-gtm-push data=context />
+    </marko-web-gtm-default-context>
+  </@head>
+  <@page>
+    <global-idx-gating|{ context: idxContext, hasRequiredFields, fields }|>
+      $ const { hasUser } = idxContext;
+      $ const canAccess = idxContext.hasUser && hasRequiredFields;
+      <marko-web-page-wrapper>
+        <if(!hasUser)>
+          <@section  modifiers=["user-form"]>
+            <h1 class="page-wrapper__title">
+              Log in to ${config.siteName()}
+            </h1>
+            <marko-web-identity-x-form-login />
+          </@section>
+        </if>
+        <else-if(!canAccess)>
+          <@section modifiers=["user-form"]>
+            <div class="page-wrapper__confirmation">
+              Email Confirmed!
+            </div>
+            <h1 class="page-wrapper__title">Step 2 of 2</h1>
+            <marko-web-identity-x-form-profile call-to-action="" reload-page-on-submit=true button-label="Create Account"/>
+          </@section>
+        </else-if>
+        <else>
+          <@section modifiers=["first-sm"]>
+            <theme-gam-define-display-ad
+              name="leaderboard"
+              position="static_page"
+              aliases=[]
+              modifiers=["inter-block"]
+            />
+          </@section>
+          <@section modifiers=["user-form"]>
+            <div class="load-analyzer">
+              <div class="load-analyzer__container">
+                <div>
+                  <div class="load-analyzer__header">
+                    <div class="load-analyzer__copy">
+                      <h1 class="load-analyzer__title">
+                        ${title}
+                      </h1>
+                      <p class="load-analyzer__call-to-action"> ${description}</p>
+                    </div>
+                  </div>
+                  <legend class="load-analyzer__title h3 w-auto">
+                    Results
+                  </legend>
+                  <div class="row">
+                    <div class="col-12 mt-block load-analyzer__toggle-wrapper">
+                      <marko-web-browser-component name="LoadToggler" props={ loadCount: loads.length } />
+                      <legend class="p small info w-auto">
+                        <a href="/load-analyzer" title="Load Calculator" >
+                          Edit Inputs
+                        </a>
+                      </legend>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <for|load, index| of=loads>
+                      <div class=`col-12 load-wrapper d-none load-wrapper--${index}` data-load-id=index>
+                        $ const {
+                          quarterDays,
+                          deadheadMiles,
+                          loadedMiles,
+                          grossRate,
+                        } = load;
+                        $ const totalMiles = Number(deadheadMiles)+ Number(loadedMiles);
+                        $ const totalCost = ((Number(fixedCost) + Number(salary)) * Number(quarterDays)) + (Number(varCostPerMile) * Number(totalMiles));
+                        $ const totalCostPerMile = (Number(totalCost) / Number(totalMiles));
+                        $ const potentialProfit = Number(grossRate) - Number(totalCost);
+                        $ const profitPerMile = Number(potentialProfit) / Number(totalMiles);
+                        $ const profitPlusSalary = Number(potentialProfit) + (Number(salary) * Number(quarterDays))
+                        $ const profitPerDay = Number(potentialProfit) / Number(quarterDays)
+                        $ const profitPlusSalaryPerDay = Number(profitPlusSalary) / Number(quarterDays)
+                        <div class="load border">
+                          <legend class="load-analyzer__title h6 w-auto">
+                            Load ${index + 1}
+                          </legend>
+                          <fieldset class="load-block">
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Total Cost to haul the load:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${totalCost.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Total cost per mile (all miles):
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${totalCostPerMile.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Potential profit:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${potentialProfit.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Profit per mile:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${profitPerMile.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Profit + salary:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${profitPlusSalary.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Profit per day:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${profitPerDay.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="load-analyzer__form-group">
+                              <div class="load-analyzer__label p-3">
+                                <div class="load-analyzer__label-text">
+                                  Profit + salary, per day:
+                                </div>
+                                <div class="load-analyzer__label-value--read-only">
+                                  $${profitPlusSalaryPerDay.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </for>
+                  </div>
+                  <legend class="p small info w-full text-center mt-3">
+                    <!-- @todo: figure out how to reset cookie -->
+                    <a id="start-over" href="/load-analyzer?reset=true" title="Load Calculator" >
+                      Start new calculation
+                    </a>
+                  </legend>
+                </div>
+              </div>
+            </div>
+          </@section>
+        </else>
+      </marko-web-page-wrapper>
+    </global-idx-gating>
+  </@page>
+</marko-web-default-page-layout>

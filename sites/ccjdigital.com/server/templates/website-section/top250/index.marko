@@ -5,7 +5,7 @@ $ const { site, pagination } = out.global;
 $ const top250 = getAsObject(site, 'config.top250');
 $ const perPage = 18;
 
-<idx-gating|{ context: idxContext, hasRequiredFields, fields }|>
+<global-idx-gating|{ context: idxContext, hasRequiredFields, fields }|>
   $ const canAccess = idxContext.hasUser && hasRequiredFields;
   $ const identityX = { user: idxContext.user, hasRequiredFields, fields}
   <global-website-section-default-layout
@@ -174,4 +174,4 @@ $ const perPage = 18;
       />
     </@section>
   </global-website-section-default-layout>
-</idx-gating>
+</global-idx-gating>
