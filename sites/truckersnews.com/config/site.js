@@ -11,6 +11,7 @@ const search = require('./search');
 
 module.exports = {
   // module configs
+  includeOsano: process.env.USE_OSANO === 'true',
   contentMeter,
   gam,
   useLinkInjectedBody: process.env.USE_LINK_INJECTED_BODY === 'true',

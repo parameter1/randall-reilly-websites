@@ -11,11 +11,19 @@ $ const {
 } = out.global;
 
 $ const omedaConfig = site.get('omeda');
+$ const includeOsano = site.get('includeOsano', false);
 
 $ const { gamDefer, gtmDefer } = req.query;
 
 <marko-web-document ...input>
   <@head>
+    <if(includeOsano)>
+      <marko-web-deferred-script-loader-register
+        name="osano"
+        src="https://cmp.osano.com/AzqQGPU8zrJGT46tU/3ec33c84-1198-4a8a-b7bb-d71d84aea87c/osano.js"
+        request-frame=true
+      />
+    </if>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
